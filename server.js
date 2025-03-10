@@ -5,6 +5,7 @@ import connectDB from './config/mongodb.js';
 import connectcloudinary from './config/cloudinary.js';
 import userRouter from './routes/userrout.js';
 import productrouter from './routes/productrout.js'
+import cartrout from './routes/cartrout.js';
 
 
 // App config
@@ -21,8 +22,9 @@ app.use(cors());
 // api endpoint
 app.use('/api/user',userRouter);
 app.use('/api/product',productrouter);
+app.use('/api/cart', cartrout)
 app.get('/',(req, res)=>{
-    res.send("hello world");
+    res.send("hello world jgf");
 })
 
 app.listen(port,()=>{
