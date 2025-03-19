@@ -1,6 +1,7 @@
 import ordermodel from "../models/ordermodel.js";
 import usermodel from "../models/usermodel.js";
 
+
 // placing order using COD method
 const placeorder = async(req, res) =>{
     try{
@@ -21,13 +22,10 @@ const placeorder = async(req, res) =>{
 
        await usermodel.findByIdAndUpdate(userid,{cartData:{}});
        res.json({success:true, message:'Order placed'})
-
-
-
+       
     }catch(error){
         console.log(error)
         res.json({success:false,message: error.message})
-
     }
 }
 
@@ -48,7 +46,16 @@ const allorders = async(req, res) =>{
 
 // user order data for front-end
 const userorders = async(req, res) =>{
-
+    try{
+        const { userid } = req.body;
+        // console.log(userid)
+        const orders = await ordermodel.find({userid})
+        // console.log(orders)
+        res.json({success: true, orders})
+    }catch(error){
+        console.log(error)
+        res.json({success:false, message:error.message});
+    }
 }
 
 // update order status only admin can change
