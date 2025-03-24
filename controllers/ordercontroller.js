@@ -76,14 +76,13 @@ const placeorderstrip = async (req, res) => {
         })
 
         const session = await stripe.checkout.sessions.create({
-            success_url: `${origin}/veryfy?success=true&orderid=${neworder._id}`,
-            cancel_url: `${origin}/veryfy?success=false&orderid=${neworder._id}`,
+            success_url: `${origin}/verify?success=true&orderid=${neworder._id}`,
+            cancel_url: `${origin}/verify?success=false&orderid=${neworder._id}`,
             line_items,
             mode: 'payment'
         })
 
         res.json({ success: true, session_url: session.url })
-
 
     } catch (error) {
         console.log(error)
@@ -93,15 +92,17 @@ const placeorderstrip = async (req, res) => {
 }
 
 // veryfy strife
-const veryfystripe = async (req, res) => {
+const verifystripe = async (req, res) => {
     const { orderid, success, userid } = req.body;
+
     try {
-        if (success === true) {
+        if (success === 'true') {
             await ordermodel.findByIdAndUpdate(orderid, { payment: true })
         await usermodel.findByIdAndUpdate(userid, { cartData: {} })
         res.json({success:true})
         }else{
-            
+             await ordermodel.findByIdAndDelete(orderid)
+             res.json({success:false})
         }
     } catch (error) {
         console.log(error)
@@ -151,5 +152,5 @@ const updatestatus = async (req, res) => {
     }
 }
 
-export { placeorder, placeorderstrip, placeorderrazorpay, allorders, userorders, updatestatus }
+export { verifystripe, placeorder, placeorderstrip, placeorderrazorpay, allorders, userorders, updatestatus }
 
